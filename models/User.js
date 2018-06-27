@@ -18,9 +18,19 @@ const UserSchema = new Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  facebookProvider: {
+    type: {
+          id: String,
+          token: String
+    },
+    select: false //if false exclude from the query
   }
 
 // TODO: ADD MORE information to user model
 });
+
+
+
 
 module.exports = User = mongoose.model('users', UserSchema);
