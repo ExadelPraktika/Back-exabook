@@ -1,4 +1,5 @@
 const JwtStrategy = require('passport-jwt').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const mongoose = require('mongoose');
 const User = mongoose.model('users');
@@ -19,4 +20,17 @@ module.exports = passport => {
             })
             .catch(err => console.log(err));
     }));
+
+    // Configure the Facebook strategy for use by Passport.
+    passport.use(new FacebookStrategy({
+            clientID: 214169345888026,
+            clientSecret: "5d8e491306cab26469a334e6ec973bbf",
+            callbackURL: "http://localhost:5000/login/facebook/callback"
+        },
+        function(accessToken, refreshToken, profile, done) {
+            User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+                return done(err, user);
+            });
+        }
+    ));
 };

@@ -28,8 +28,18 @@ require('./config/passport')(passport);
 
 app.get('/', (req, res) => res.send('Hello'));
 
+app.get('/login/facebook',
+    passport.authenticate('facebook'));
+
+app.get('/login/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    function(req, res) {
+        res.redirect('/');
+    });
+
 // Routes
 app.use('/api/users', users);
+
 
 const port = 5000;
 
