@@ -1,6 +1,6 @@
 const JwtStrategy = require('passport-jwt').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const mongoose = require('mongoose');
 const User = mongoose.model('users');
 const keys = require('../config/keys');
@@ -21,16 +21,24 @@ module.exports = passport => {
             .catch(err => console.log(err));
     }));
 
-    // Configure the Facebook strategy for use by Passport.
     passport.use(new FacebookStrategy({
             clientID: 214169345888026,
-            clientSecret: "5d8e491306cab26469a334e6ec973bbf",
-            callbackURL: "http://localhost:5000/login/facebook/callback"
+            clientSecret: '5d8e491306cab26469a334e6ec973bbf',
+            callbackURL: 'http://localhost:3000/login/facebook/return'
         },
-        function(accessToken, refreshToken, profile, done) {
-            User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-                return done(err, user);
-            });
-        }
-    ));
+        function(accessToken, refreshToken, profile, cb) {
+            // In this example, the user's Facebook profile is supplied as the user
+            // record.  In a production-quality application, the Facebook profile should
+            // be associated with a user record in the application's database, which
+            // allows for account linking and authentication with other identity
+            // providers.
+            return cb(null, profile);
+        }));
+    passport.serializeUser(function(user, cb) {
+        cb(null, user);
+    });
+
+    passport.deserializeUser(function(obj, cb) {
+        cb(null, obj);
+    });
 };
