@@ -40,12 +40,20 @@ app.use('/api/users', users);
 
 app.get('/', (req, res) => res.render('home', { user: req.user }));
 
-app.get('/login', passport.authenticate('facebook'));
+app.get('/login', (req, res) => {
+    res.render('login');
+});
 
-app.get('/login/facebook/return', passport.authenticate('facebook', { failureRedirect: '/login' }),
-    function(req, res) {
+app.get('/login/facebook', passport.authenticate('facebook'));
+
+app.get('/login/facebook/return', passport.authenticate('facebook', { failureRedirect: '/' }),
+    (req, res) => {
         // Successful authentication, redirect home.
         res.redirect('/profile');
+    });
+app.get('/profile', require('connect-ensure-login').ensureLoggedIn(),
+    function(req, res){
+        res.render('profile', { user: req.user });
     });
 
 const port = 5000;
