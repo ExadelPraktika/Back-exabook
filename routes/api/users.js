@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const User = require('../../models/user');
+const mid = require('../../middleware/index');
 
 //Passport Config
 require('../../config/passport')(passport);
@@ -12,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 // GET /login
-router.get('/login', (req, res, next) => {
+router.get('/login', mid.loggedOut, (req, res, next) => {
     return res.render('login', { title: 'Log in'});
 });
 
@@ -36,8 +37,21 @@ router.post('/login', (req, res, next) => {
     }
 });
 
+//GET logout
+router.get('/logout', (req, res, next) => {
+   if(req.session){
+       req.session.destroy(err => {
+           if(err){
+               return next(err);
+           } else {
+               return res.redirect('/');
+           }
+       });
+   }
+});
+
 // GET /register
-router.get('/register', (req, res, next) => {
+router.get('/register', mid.loggedOut, (req, res, next) => {
     return res.render('register', { title: 'Sign up'});
 });
 // POST /register
@@ -77,12 +91,7 @@ router.post('/register', (req, res, next) => {
 });
 
 //GET /profile
-router.get('/profile', (req, res, next)=>{
-    if( !req.session.userId){
-        const err = new Error('You are not authorized to view this page.');
-        err.status = 403;
-        return next(err);
-    }
+router.get('/profile', mid.requiresLogIn, (req, res, next)=>{
     User.findById(req.session.userId)
         .exec((error, user)=>{
             if(error){

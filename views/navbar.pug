@@ -4,10 +4,17 @@ nav.navbar.navbar-fixed-top.navbar-dark.bg-inverse
     .container
       a.navbar-brand(href='/')
         i.icn-logo.material-icons bookmark_border
-        | Bookworm
+        | Exabook
       .nav-items.clearfix
-        a.nav-item.nav-link(href='register') Sign Up
+        if !currentUser
+          a.nav-item.nav-link(href='register') Sign Up
         a.nav-item.nav-link(href='profile') My Profile
         a.nav-item.nav-link(href='login/facebook') Log in with Facebook
-      a.btn.btn-info.pull-md-right(href='login') Login
+
+      if currentUser
+        div
+          img.avatar.img-circle.hidden-xs-down(src='/images/avatar.png', alt='avatar')
+          a.btn.btn-light.pull-md-right(href='/logout') Log out
+      else
+        a.btn.btn-info.pull-md-right(href='login') Login
 

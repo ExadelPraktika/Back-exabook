@@ -3,19 +3,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 const app = express();
-
-// use session for tracking
-app.use(session({
-    secret: 'exadel',
-    resave: true,
-    saveUninitialized: false
-}));
-
-//Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 // DB Config
 const db = require('./config/keys').mongoURI;
@@ -25,6 +15,26 @@ mongoose
   .connect(db)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
+
+// use session for tracking
+app.use(session({
+    secret: 'exadel',
+    resave: true,
+    saveUninitialized: false,
+    store: new MongoStore({
+        mongooseConnection: mongoose.connection
+    })
+}));
+
+// make user ID available in templates
+app.use((req, res, next) => {
+    res.locals.currentUser = req.session.userId;
+    next();
+});
+
+//Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Parse incoming requests
 app.use(bodyParser.json());
