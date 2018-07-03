@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "pretest": "eslint --ignore-path .gitignore ."
   },
   "author": "",
   "license": "MIT",
@@ -24,6 +25,8 @@
     "pug": "^2.0.3"
   },
   "devDependencies": {
+    "eslint": "^5.0.1",
+    "eslint-config-strongloop": "^2.1.0",
     "nodemon": "^1.17.5"
   }
 }
