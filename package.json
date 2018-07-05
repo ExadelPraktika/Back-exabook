@@ -4,8 +4,8 @@
   "description": "Back end for social network",
   "main": "server.js",
   "scripts": {
-    "start": "eslint --ignore-path .gitignore . && node server.js",
-    "server": "cross-env NODE_ENV=prod nodemon server.js",
+    "start": "eslint --ignore-path .gitignore . && node server/server.js",
+    "server": "cross-env NODE_ENV=prod nodemon server/server.js",
     "test": "cross-env NODE_ENV=test mocha --timeout 5000 __tests__/server/**/*.test.js",
     "pretest": "eslint --ignore-path .gitignore ."
   },
