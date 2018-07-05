@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
@@ -34,11 +35,13 @@ app.use((req, res, next) => {
 
 //Passport middleware
 app.use(passport.initialize());
-app.use(passport.session());
 
 // Parse incoming requests
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// log requests to console
+app.use(morgan('dev'));
 
 // serve static files from /public
 app.use(express.static(__dirname + '/public'));
@@ -48,8 +51,7 @@ app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
 // Routes
-const users = require('./routes/api/users');
-app.use('/', users);
+app.use('/', require('./routes/api/users'));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
