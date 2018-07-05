@@ -19,6 +19,7 @@ module.exports = {
         'dot-notation': ["error", { "allowKeywords": false }],
         'arrow-body-style': ["error", "always"],
         'object-shorthand': [2, "consistent"],
-        'no-restricted-imports': ["error", "passport"]
+        'no-restricted-imports': ["error", "passport"],
+        'no-unused-vars': [2, { "args": "none" }]
       }
 }
