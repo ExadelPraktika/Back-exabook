@@ -1,5 +1,3 @@
-import '../passport';
-
 const router = require('express-promise-router')();
 const passport = require('passport');
 
