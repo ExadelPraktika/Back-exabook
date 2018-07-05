@@ -1,57 +1,86 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
-const UserSchema = new mongoose.Schema({
-  email: {
+const { Schema } = mongoose;
+
+// Create a schema
+const userSchema = new Schema({
+  method: {
     type: String,
-    required: true,
-    unique: true,
-    trim: true
-  },
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  password: {
-    type: String,
+    enum: ['local', 'google', 'facebook'],
     required: true
+  },
+  local: {
+    email: {
+      type: String,
+      lowercase: true
+    },
+    password: {
+      type: String
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    }
+  },
+  google: {
+    id: {
+      type: String
+    },
+    email: {
+      type: String,
+      lowercase: true
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    }
+  },
+  facebook: {
+    id: {
+      type: String
+    },
+    email: {
+      type: String,
+      lowercase: true
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    }
   }
 });
 
-const User = mongoose.model('User', UserSchema);
-
-// authenticate input against data in mongo
-UserSchema.statics.authenticate = (email, password, callback) => {
-  User.findOne({ email })
-    .exec((error, user) => {
-      if (error) {
-        return callback(error);
-      } else if (!user) {
-        const err = new Error('User not found');
-        err.status = 401;
-        return callback(err);
-      }
-      bcrypt.compare(password, user.password, (_error, result) => {
-        if (result === true) {
-          return callback(null, user);
-        }
-        return callback();
-      });
-      return callback();
-    });
-};
-// hashing password before saving to database
-UserSchema.pre('save', function (next) {
-  const user = this;
-  bcrypt.hash(user.password, 10, (err, hash) => {
-    if (err) {
-      next(err);
-    } else {
-      user.password = hash;
+userSchema.pre('save', async function (next) {
+  try {
+    console.log('entered');
+    if (this.method !== 'local') {
       next();
     }
-  });
+
+    // Generate a salt
+    const salt = await bcrypt.genSalt(10);
+    // Generate a password hash (salt + hash)
+    const passwordHash = await bcrypt.hash(this.local.password, salt);
+    // Re-assign hashed version over original, plain text password
+    this.local.password = passwordHash;
+    console.log('exited');
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
+userSchema.methods.isValidPassword = async function (newPassword) {
+  try {
+    return await bcrypt.compare(newPassword, this.local.password);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// Create a model
+const User = mongoose.model('user', userSchema);
+
+// Export the model
 module.exports = User;

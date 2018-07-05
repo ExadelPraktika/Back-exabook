@@ -15,6 +15,10 @@ module.exports = {
           "sourceType": "module"
         },
         "no-underscore-dangle": ["error", { "allow": ["_id"] }],
-        "consistent-return": ["error", { "treatUndefinedAsUnspecified": true }]
+        "consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
+        'dot-notation': ["error", { "allowKeywords": false }],
+        'arrow-body-style': ["error", "always"],
+        'object-shorthand': [2, "consistent"],
+        'no-restricted-imports': ["error", "passport"]
       }
 }
