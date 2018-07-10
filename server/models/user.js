@@ -17,10 +17,6 @@ const userSchema = new Schema({
     },
     password: {
       type: String
-    },
-    date: {
-      type: Date,
-      default: Date.now
     }
   },
   google: {
@@ -30,10 +26,6 @@ const userSchema = new Schema({
     email: {
       type: String,
       lowercase: true
-    },
-    date: {
-      type: Date,
-      default: Date.now
     }
   },
   facebook: {
@@ -43,10 +35,6 @@ const userSchema = new Schema({
     email: {
       type: String,
       lowercase: true
-    },
-    date: {
-      type: Date,
-      default: Date.now
     }
   }
 });

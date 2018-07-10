@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const db = require('./configuration/config').mongoURI;
@@ -15,6 +16,7 @@ if (process.env.NODE_ENV === 'test') {
 
 const app = express();
 
+app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 // Middlewares moved morgan into if for clear tests
