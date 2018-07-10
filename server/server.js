@@ -9,9 +9,9 @@ const dbTest = require('./configuration/config').mongoURITest;
 
 mongoose.Promise = global.Promise;
 if (process.env.NODE_ENV === 'test') {
-  mongoose.connect(db, { useMongoClient: true });
-} else {
   mongoose.connect(dbTest, { useMongoClient: true });
+} else {
+  mongoose.connect(db, { useMongoClient: true });
 }
 
 const app = express();
@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use('/users', require('./routes/users'));
 
 // Start the server
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3006;
 app.listen(port);
 console.log(`Server listening at ${port}`);
 

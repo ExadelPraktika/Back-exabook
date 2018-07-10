@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const JWT = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../configuration');
@@ -10,6 +11,9 @@ const signToken = (user) => {
     exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
   }, JWT_SECRET);
 };
+
+mongoose.set('debug', true);
+
 
 module.exports = {
   signUp: async (req, res) => {
@@ -54,6 +58,15 @@ module.exports = {
     // Generate token
     const token = signToken(req.user);
     res.status(200).json({ token });
+  },
+
+  getUser: async (req, res) => {
+    console.log('params', req.params.id);
+    return User.findById(req.params.id)
+      .then((user) => {
+        console.log(`this is user ${user}`);
+        res.status(200).json({ user });
+      });
   },
 
   secret: async (req, res) => {
