@@ -15,6 +15,9 @@ const userSchema = new Schema({
       type: String,
       lowercase: true
     },
+    name: {
+      type: String
+    },
     password: {
       type: String
     }
@@ -26,6 +29,9 @@ const userSchema = new Schema({
     email: {
       type: String,
       lowercase: true
+    },
+    name: {
+      type: String
     }
   },
   facebook: {
@@ -35,6 +41,9 @@ const userSchema = new Schema({
     email: {
       type: String,
       lowercase: true
+    },
+    name: {
+      type: String
     }
   }
 });

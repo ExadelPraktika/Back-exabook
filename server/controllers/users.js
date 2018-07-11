@@ -17,7 +17,7 @@ mongoose.set('debug', true);
 
 module.exports = {
   signUp: async (req, res) => {
-    const { email, password } = req.value.body;
+    const { name, email, password } = req.value.body;
 
     // Check if there is a user with the same email
     const foundUser = await User.findOne({ 'local.email': email });
@@ -30,6 +30,7 @@ module.exports = {
       method: 'local',
       local: {
         email: email,
+        name: name,
         password: password
       }
     });

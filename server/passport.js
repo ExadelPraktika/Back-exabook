@@ -49,7 +49,8 @@ passport.use('googleToken', new GooglePlusTokenStrategy({
       method: 'google',
       google: {
         id: profile.id,
-        email: profile.emails[0].value
+        email: profile.emails[0].value,
+        name: profile.displayName
       }
     });
 
@@ -78,7 +79,8 @@ passport.use('facebookToken', new FacebookTokenStrategy({
       method: 'facebook',
       facebook: {
         id: profile.id,
-        email: profile.emails[0].value
+        email: profile.emails[0].value,
+        name: profile.displayName
       }
     });
 
