@@ -18,6 +18,7 @@ module.exports = {
         "consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
         'dot-notation': ["error", { "allowKeywords": true }],
         'arrow-body-style': ["error", "always"],
+        
         'object-shorthand': [2, "consistent"],
         'no-restricted-imports': ["error", "passport"],
         'no-unused-vars': [2, { "args": "none" }],

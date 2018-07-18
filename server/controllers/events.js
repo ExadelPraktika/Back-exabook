@@ -11,11 +11,11 @@ module.exports = {
   },
 
   getEvents: async (req, res) => {
-    Events.find({ end: { $gte: new Date() } })
+    Events.find({ end: { $gte: new Date(Date.now() - 1000 * 7200) } })
       .populate(
         ['creator', 'going.user']
       )
-      .sort({ end: -1 })
+      .sort({ start: 'asc' })
       .then((events) => { res.json(events); })
       .catch((err) => {
         res.status(404).json({ nopostfound: 'No events found' });
@@ -23,6 +23,9 @@ module.exports = {
   },
   getEvent: async (req, res) => {
     Events.findById(req.params.id)
+      .populate(
+        ['creator', 'going.user', 'comments.user']
+      )
       .then((event) => { res.json(event); })
       .catch((err) => {
         res.status(404).json({ nopostfound: 'No event found' });
@@ -30,7 +33,10 @@ module.exports = {
   },
   getUserEvents: async (req, res) => {
     Events.find({ $or: [{ 'going.user': req.params.id }, { creator: req.params.id }] })
-      .sort({ end: -1 })
+      .populate(
+        ['creator', 'going.user']
+      )
+      .sort({ start: 'asc' })
       .then((events) => { res.json(events); })
       .catch((err) => {
         res.status(404).json({ nopostfound: 'No events found' });
@@ -43,6 +49,7 @@ module.exports = {
       description: req.body.description,
       location: req.body.location,
       start: req.body.start,
+      photo: req.body.photo,
       end: req.body.end
     });
     newEvent.save().then((event) => {
@@ -73,7 +80,7 @@ module.exports = {
         Events.findById(req.params.idas)
           .then((event) => {
             if (event.going.filter((going) => { return going.user.toString() === req.params.id; }).length > 0) {
-              return res.status(400).json({ alreadyliked: 'User already liked this post' });
+              return res.status(400).json({ alreadyliked: 'already going' });
             }
             event.going.unshift({ user: req.params.id });
             return event.save().then((resevent) => { return res.json(resevent); });
@@ -89,7 +96,7 @@ module.exports = {
         Events.findById(req.params.idas)
           .then((event) => {
             if (event.going.filter((going) => { return going.user.toString() === req.params.id; }).length === 0) {
-              return res.status(400).json({ alreadyliked: 'You are not attending to this event yet' });
+              return res.status(400).json({ alreadyliked: 'already not going' });
             }
             const removeIndex = event.going
               .map((item) => { return item.user.toString(); })
@@ -100,6 +107,40 @@ module.exports = {
           .catch((err) => {
             res.status(404).json({ nopostfound: 'No event found' });
           });
+      });
+  },
+
+  commentEvent: async (req, res) => {
+    Events.findById(req.params.id)
+      .then((event) => {
+        const newComment = {
+          text: req.body.text,
+          name: req.body.name,
+          user: req.user.id
+        };
+        event.comments.unshift(newComment);
+        return event.save().then((eventas) => { return res.json(eventas); });
+      })
+      .catch((err) => {
+        res.status(404).json({ nopostfound: 'No event found' });
+      });
+  },
+  deleteComment: async (req, res) => {
+    Events.findById(req.params.id)
+      .then((event) => {
+        if (event.comments.filter((comment) => { return comment._id.toString() === req.params.comment_id; })
+          .length === 0) {
+          return res.status(404).json({ commentnotexists: 'Comment does not exist' });
+        }
+        const removeIndex = event.comments
+          .map((item) => { return item._id.toString(); })
+          .indexOf(req.params.comment_id);
+
+        event.comments.splice(removeIndex, 1);
+        return event.save().then((eventas) => { return res.json(eventas); });
+      })
+      .catch((err) => {
+        res.status(404).json({ nopostfound: 'No event found' });
       });
   }
 

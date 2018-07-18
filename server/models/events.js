@@ -20,7 +20,6 @@ const eventSchema = new Schema({
     type: String
   },
   photo: {
-    data: Buffer,
     type: String
   },
   start: {
@@ -34,6 +33,25 @@ const eventSchema = new Schema({
       user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
+      }
+    }
+  ],
+  comments: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      text: {
+        type: String,
+        required: true
+      },
+      name: {
+        type: String
+      },
+      date: {
+        type: Date,
+        default: Date.now
       }
     }
   ],

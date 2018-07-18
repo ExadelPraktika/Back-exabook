@@ -29,4 +29,10 @@ router.route('/going/:id/:idas')
 router.route('/ungoing/:id/:idas')
   .post(passportJWT, EventsController.cancelGoing);
 
+router.route('/comment/:id')
+  .post(passportJWT, EventsController.commentEvent);
+
+router.route('/comment/:id/:comment_id')
+  .delete(passportJWT, EventsController.deleteComment);
+
 module.exports = router;
