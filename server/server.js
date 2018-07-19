@@ -35,6 +35,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/users', require('./routes/users'));
+app.use('/posts', require('./routes/posts'));
 app.use('/events', require('./routes/events'));
 
 // Sockets
