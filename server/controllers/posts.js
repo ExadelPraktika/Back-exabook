@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const User = require('../models/user');
+// const User = require('../models/user');
 const Post = require('../models/post');
 
 mongoose.set('debug', true);
@@ -14,7 +14,7 @@ module.exports = {
     const newPost = new Post({
       author: req.user.id,
       postBody: req.body.postBody,
-      datePosted: req.body.datePosted,
+      datePosted: req.body.datePosted
     });
 
     newPost.save().then((post) => {
@@ -40,6 +40,5 @@ module.exports = {
 
   sharePost: async (req, res) => {
     res.json({ msg: 'Sharing Works' });
-  },
-
+  }
 };
