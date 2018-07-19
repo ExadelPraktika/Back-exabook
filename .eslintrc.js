@@ -16,13 +16,10 @@ module.exports = {
         },
         "no-underscore-dangle": ["error", { "allow": ["_id"] }],
         "consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
-        'dot-notation': ["error", { "allowKeywords": true }],
+        'dot-notation': ["error", { "allowKeywords": false }],
         'arrow-body-style': ["error", "always"],
-        
         'object-shorthand': [2, "consistent"],
         'no-restricted-imports': ["error", "passport"],
-        'no-unused-vars': [2, { "args": "none" }],
-        'no-empty': ["error", { allowEmptyCatch: true }],
-        'no-shadow': ["error", { "hoist": "functions" }]
+        'no-unused-vars': [2, { "args": "none" }]
       }
 }
