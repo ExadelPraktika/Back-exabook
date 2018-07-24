@@ -8,8 +8,8 @@ const passportJWT = passport.authenticate('jwt', { session: false });
 router.route('/test')
   .get(passportJWT, MarketplaceController.test);
 
-router.route('/:id')
-  .get(passportJWT, MarketplaceController.getPost);
+router.route('/search')
+  .post(passportJWT, MarketplaceController.getSearchedPosts);
 
 router.route('/')
   .get(passportJWT, MarketplaceController.getMarketplace);
