@@ -1,1 +1,3 @@
-#npm run server - starts server with nodemon
+### Installing
+ 1. npm i
+ 2. npm start

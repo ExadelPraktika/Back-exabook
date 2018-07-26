@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const router = require('express-promise-router')();
 const passport = require('passport');
 const PostsController = require('../controllers/posts');
@@ -28,3 +29,35 @@ router.route('/share/:id')
   .post(passportJWT, PostsController.likePost);
 
 module.exports = router;
+=======
+const router = require('express-promise-router')();
+const passport = require('passport');
+const PostsController = require('../controllers/posts');
+
+require('../passport');
+
+const passportJWT = passport.authenticate('jwt', { session: false });
+
+router.route('/test')
+  .get(passportJWT, PostsController.test);
+
+router.route('/:id')
+  .get(passportJWT, PostsController.getPost);
+
+router.route('/')
+  .get(passportJWT, PostsController.getFeed);
+
+// router.route('/')
+//   .get(passportJWT, PostsController.deletePost);
+
+router.route('/')
+  .post(passportJWT, PostsController.addPost);
+
+router.route('/like/:id')
+  .post(passportJWT, PostsController.likePost);
+
+router.route('/share/:id')
+  .post(passportJWT, PostsController.likePost);
+
+module.exports = router;
+>>>>>>> 04693f714486e87519954ec8e38d9e6c7971f6f0
