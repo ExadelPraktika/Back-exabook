@@ -19,9 +19,17 @@ module.exports = {
   getSearchedPosts: async (req, res) => {
     let search = {};
     if (req.body.max) search = { price: { $gte: req.body.min, $lt: req.body.max } };
-    if (req.body.category) search = { ...search, category: { $regex: (req.body.category) } };
+    if (req.body.category) search = { ...search, category: new RegExp(req.body.category, 'i') };
     if (req.body.location) search = { ...search, location: req.body.location };
-    if (req.body.search) search = { ...search, description: { $regex: (req.body.search) }, title: { $regex: (req.body.search) } };
+    if (req.body.search) {
+      search = {
+        ...search,
+        $or: [{
+          description: new RegExp(req.body.search, 'i'),
+          title: new RegExp(req.body.search, 'i')
+        }]
+      };
+    }
     Marketplace.find({ ...search })
       .populate('creator')
       .then((post) => { res.json(post); })
@@ -30,7 +38,12 @@ module.exports = {
       });
   },
   getUserPost: async (req, res) => {
-    res.json({ msg: 'getUserPost Works' });
+    Marketplace.find({ creator: req.params.id })
+      .populate('creator')
+      .then((posts) => { res.json(posts); })
+      .catch((err) => {
+        res.status(404).json({ nopostfound: 'No posts found' });
+      });
   },
   createPost: async (req, res) => {
     const newPost = new Marketplace({
