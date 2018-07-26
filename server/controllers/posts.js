@@ -12,9 +12,9 @@ module.exports = {
 
   addPost: async (req, res) => {
     const newPost = new Post({
-      author: req.user.id,
+      creator: req.user.id,
       postBody: req.body.postBody,
-      datePosted: req.body.datePosted,
+      datePosted: req.body.datePosted
     });
 
     newPost.save().then((post) => {
@@ -27,11 +27,30 @@ module.exports = {
   },
 
   deletePost: async (req, res) => {
-    res.json({ msg: 'Delete Post Works' });
+    User.findById(req.params.id)
+      .then((user) => {
+        Post.findById(req.params.idas)
+          .then((post) => {
+            if (post.creator.toString() !== req.params.id) {
+              return res.status(401).json({ notauthorize: 'User not authorize' });
+            }
+            post.remove().then(() => {
+              res.json({ success: true });
+            })
+              .catch((err) => {
+                res.status(404).json({ nopostfound: 'No event found' });
+              });
+            return true;
+          });
+      });
   },
 
   getFeed: async (req, res) => {
-    res.json({ msg: 'Get Feed Works' });
+    Post.find()
+      .then((posts) => { res.json(posts); })
+      .catch((err) => {
+        res.status(404).json({ nopostfound: 'No posts found' });
+      });
   },
 
   likePost: async (req, res) => {
@@ -40,6 +59,6 @@ module.exports = {
 
   sharePost: async (req, res) => {
     res.json({ msg: 'Sharing Works' });
-  },
+  }
 
 };

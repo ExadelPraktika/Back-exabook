@@ -9,14 +9,14 @@ const passportJWT = passport.authenticate('jwt', { session: false });
 router.route('/test')
   .get(passportJWT, PostsController.test);
 
-router.route('/:id')
-  .get(passportJWT, PostsController.getPost);
+// router.route('/:id')
+//   .get(passportJWT, PostsController.getPost);
 
 router.route('/')
   .get(passportJWT, PostsController.getFeed);
 
-// router.route('/')
-//   .get(passportJWT, PostsController.deletePost);
+router.route('/:id/:idas')
+  .get(passportJWT, PostsController.deletePost);
 
 router.route('/')
   .post(passportJWT, PostsController.addPost);
