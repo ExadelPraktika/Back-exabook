@@ -50,6 +50,8 @@ module.exports = {
       location: req.body.location,
       start: req.body.start,
       photo: req.body.photo,
+      coordLat: req.body.coordLat,
+      coordLng: req.body.coordLng,
       end: req.body.end
     });
     newEvent.save().then((event) => {
@@ -116,6 +118,7 @@ module.exports = {
         const newComment = {
           text: req.body.text,
           name: req.body.name,
+          photo: req.body.photo,
           user: req.user.id
         };
         event.comments.unshift(newComment);
@@ -142,6 +145,34 @@ module.exports = {
       .catch((err) => {
         res.status(404).json({ nopostfound: 'No event found' });
       });
-  }
+  },
 
+  commentLike: async (req, res) => {
+    console.log('working', req.params.id, req.params.idas, req.params.commentID);
+    Events.findOneAndUpdate(
+      { _id: req.params.idas, comments: { $elemMatch: { _id: req.params.commentID, 'likes.user': { $ne: req.params.id } } } },
+      { $push: { 'comments.$.likes': { user: req.params.id } } },
+      (result) => {
+        res.json(result);
+      }
+    );
+  },
+  deleteLike: async (req, res) => {
+    console.log('working', req.params.id, req.params.idas, req.params.commentID);
+    Events.findOneAndUpdate(
+      { _id: req.params.idas, comments: { $elemMatch: { _id: req.params.commentID } } },
+      {
+        $pull: { 'comments.$.likes': { user: req.params.id } }
+      },
+      (result) => {
+        res.json(result);
+      }
+    );
+  }
 };
+// $push: {
+//   'comments.$.likes': {
+//     $each: [],
+//     $slice: { $indexOfArray: [['comments.$.likes'], req.params.id] }
+//   }
+// }

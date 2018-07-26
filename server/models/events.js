@@ -19,6 +19,12 @@ const eventSchema = new Schema({
   location: {
     type: String
   },
+  coordLng: {
+    type: Number
+  },
+  coordLat: {
+    type: Number
+  },
   photo: {
     type: String
   },
@@ -46,13 +52,24 @@ const eventSchema = new Schema({
         type: String,
         required: true
       },
+      photo: {
+        type: String
+      },
       name: {
         type: String
       },
       date: {
         type: Date,
         default: Date.now
-      }
+      },
+      likes: [
+        {
+          user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+          }
+        }
+      ]
     }
   ],
   date: {
