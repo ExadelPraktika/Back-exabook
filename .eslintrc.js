@@ -6,7 +6,7 @@ module.exports = {
         "es6": true
       },
       "rules": {
-        "max-len": [2, 120, 2], 
+        "max-len": [2, 160, 2], 
         "linebreak-style": ["error", "windows"],
         "func-names": ["error", "never"],
         "comma-dangle": ["error", "never"],

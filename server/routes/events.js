@@ -35,4 +35,10 @@ router.route('/comment/:id')
 router.route('/comment/:id/:comment_id')
   .delete(passportJWT, EventsController.deleteComment);
 
+router.route('/comments/like/:id/:idas/:commentID')
+  .post(passportJWT, EventsController.commentLike);
+
+router.route('/comments/unlike/:id/:idas/:commentID')
+  .post(passportJWT, EventsController.deleteLike);
+
 module.exports = router;
