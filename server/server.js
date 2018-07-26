@@ -37,7 +37,7 @@ app.use(bodyParser.json());
 app.use('/users', require('./routes/users'));
 app.use('/posts', require('./routes/posts'));
 app.use('/events', require('./routes/events'));
-
+app.use('/marketplace', require('./routes/marketplace'));
 // Sockets
 io.on('connection', (socket) => {
   socket.on('SEND_MESSAGE', (data) => {
