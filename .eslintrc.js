@@ -25,4 +25,4 @@ module.exports = {
         'no-empty': ["error", { allowEmptyCatch: true }],
         'no-shadow': ["error", { "hoist": "functions" }]
       }
-}
+};

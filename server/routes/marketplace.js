@@ -11,6 +11,9 @@ router.route('/test')
 router.route('/search')
   .post(passportJWT, MarketplaceController.getSearchedPosts);
 
+router.route('/:userId/:postId')
+  .delete(passportJWT, MarketplaceController.deletePost);
+
 router.route('/')
   .get(passportJWT, MarketplaceController.getMarketplace);
 

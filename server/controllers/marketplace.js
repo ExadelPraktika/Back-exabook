@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 // const JWT = require('jsonwebtoken');
 const Marketplace = require('../models/marketplace');
+const User = require('../models/user');
 
 mongoose.set('debug', true);
 
@@ -60,5 +61,23 @@ module.exports = {
     newPost.save().then((post) => {
       res.json(post);
     });
+  },
+  deletePost: async (req, res) => {
+    User.findById(req.params.userId)
+      .then((user) => {
+        Marketplace.findById(req.params.postId)
+          .then((post) => {
+            if (post.creator.toString() !== req.params.userId) {
+              return res.status(401).json({ notauthorized: 'User not authorize' });
+            }
+            post.remove().then(() => {
+              res.json({ success: true });
+            })
+              .catch((err) => {
+                res.status(404).json({ nopostfound: 'No post found' });
+              });
+            return true;
+          });
+      });
   }
 };
