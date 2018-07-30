@@ -45,6 +45,10 @@ const userSchema = new Schema({
     name: {
       type: String
     }
+  },
+  marketRating: {
+    type: Array,
+    default: []
   }
 });
 

@@ -79,5 +79,20 @@ module.exports = {
             return true;
           });
       });
+  },
+  update: async (req, res) => {
+    const updateObject = { rating: req.body.rating, liked: req.body.liked, disableComments: req.body.disableComments };
+    Marketplace.update({ _id: req.body._id }, { $set: { ...updateObject } }, { upsert: true })
+      .then((post) => {
+        Marketplace.find()
+          .populate('creator')
+          .then((posts) => { res.json(posts); })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
   }
 };

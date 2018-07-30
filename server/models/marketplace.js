@@ -42,6 +42,14 @@ const marketSchema = new Schema({
   },
   location: {
     type: String
+  },
+  rating: {
+    type: String,
+    default: 'Rate'
+  },
+  disableComments: {
+    type: Boolean,
+    default: false
   }
 });
 
