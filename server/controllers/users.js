@@ -69,6 +69,15 @@ module.exports = {
         res.status(200).json({ user });
       });
   },
+  addAvatar: async (req, res) => {
+    // const { avatar } = req.body;
+    User.findById(req.params.id)
+      .then((user) => {
+        user.avatar = req.body.avatar;
+        user.save();
+        res.status(200).json({ user });
+      });
+  },
 
   secret: async (req, res) => {
     console.log('I managed to get here!');

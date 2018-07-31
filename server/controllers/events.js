@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 // const JWT = require('jsonwebtoken');
 const User = require('../models/user');
 const Events = require('../models/events');
+const validateEventInput = require('./validation/events');
 
 mongoose.set('debug', true);
 
@@ -43,6 +44,12 @@ module.exports = {
       });
   },
   createEvent: async (req, res) => {
+    const { errors, isValid } = validateEventInput(req.body);
+    if (!isValid) {
+      console.log(errors);
+      return res.status(400).json(errors);
+    }
+
     const newEvent = new Events({
       creator: req.user.id,
       title: req.body.title,
@@ -54,7 +61,7 @@ module.exports = {
       coordLng: req.body.coordLng,
       end: req.body.end
     });
-    newEvent.save().then((event) => {
+    return newEvent.save().then((event) => {
       res.json(event);
     });
   },

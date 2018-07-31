@@ -28,6 +28,9 @@ router.route('/oauth/facebook')
 router.route('/get/:id')
   .get(UsersController.getUser);
 
+router.route('/avatar/:id')
+  .put(UsersController.addAvatar);
+
 router.route('/secret')
   .get(passportJWT, UsersController.secret);
 
