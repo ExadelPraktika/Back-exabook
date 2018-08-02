@@ -80,9 +80,36 @@ module.exports = {
           });
       });
   },
-  update: async (req, res) => {
-    const updateObject = { rating: req.body.rating, liked: req.body.liked, disableComments: req.body.disableComments };
-    Marketplace.update({ _id: req.body._id }, { $set: { ...updateObject } }, { upsert: true })
+  updateRating: async (req, res) => {
+    Marketplace.update({ _id: req.body._id }, { $set: { rating: req.body.rating } }, { upsert: true })
+      .then((post) => {
+        Marketplace.find()
+          .populate('creator')
+          .then((posts) => { res.json(posts); })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+  updateLikes: async (req, res) => {
+    Marketplace.update({ _id: req.body._id }, { $set: { liked: req.body.liked } }, { upsert: true })
+      .then((post) => {
+        Marketplace.find()
+          .populate('creator')
+          .then((posts) => { res.json(posts); })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+  updateComments: async (req, res) => {
+    Marketplace.update({ _id: req.body._id }, { $set: { disableComments: req.body.disableComments } }, { upsert: true })
       .then((post) => {
         Marketplace.find()
           .populate('creator')

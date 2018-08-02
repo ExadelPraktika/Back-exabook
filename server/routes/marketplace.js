@@ -23,7 +23,13 @@ router.route('/')
 router.route('/my/:id')
   .get(passportJWT, MarketplaceController.getUserPost);
 
-router.route('/update')
-  .post(passportJWT, MarketplaceController.update);
+router.route('/update/rating')
+  .post(passportJWT, MarketplaceController.updateRating);
+
+router.route('/update/likes')
+  .post(passportJWT, MarketplaceController.updateLikes);
+
+router.route('/update/comments')
+  .post(passportJWT, MarketplaceController.updateComments);
 
 module.exports = router;
