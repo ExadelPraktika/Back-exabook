@@ -10,6 +10,9 @@ const userSchema = new Schema({
     enum: ['local', 'google', 'facebook'],
     required: true
   },
+  avatar: {
+    type: String
+  },
   local: {
     email: {
       type: String,
