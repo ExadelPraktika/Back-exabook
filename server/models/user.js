@@ -10,6 +10,9 @@ const userSchema = new Schema({
     enum: ['local', 'google', 'facebook'],
     required: true
   },
+  avatar: {
+    type: String
+  },
   local: {
     email: {
       type: String,
@@ -45,6 +48,10 @@ const userSchema = new Schema({
     name: {
       type: String
     }
+  },
+  marketRating: {
+    type: Array,
+    default: []
   }
 });
 
