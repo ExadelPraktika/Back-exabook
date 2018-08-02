@@ -11,6 +11,9 @@ router.route('/test')
 router.route('/search')
   .post(passportJWT, MarketplaceController.getSearchedPosts);
 
+router.route('/:userId/:postId')
+  .delete(passportJWT, MarketplaceController.deletePost);
+
 router.route('/')
   .get(passportJWT, MarketplaceController.getMarketplace);
 
@@ -19,5 +22,14 @@ router.route('/')
 
 router.route('/my/:id')
   .get(passportJWT, MarketplaceController.getUserPost);
+
+router.route('/update/rating')
+  .post(passportJWT, MarketplaceController.updateRating);
+
+router.route('/update/likes')
+  .post(passportJWT, MarketplaceController.updateLikes);
+
+router.route('/update/comments')
+  .post(passportJWT, MarketplaceController.updateComments);
 
 module.exports = router;

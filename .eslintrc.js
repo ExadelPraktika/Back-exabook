@@ -27,4 +27,4 @@ module.exports = {
         'func-names': ["error", "never"],
         'no-param-reassign': ["error", { "props": false }]
       }
-}
+};

@@ -29,8 +29,8 @@ const marketSchema = new Schema({
     default: []
   },
   liked: {
-    type: Boolean,
-    default: false
+    type: Array,
+    default: []
   },
   timePosted: {
     type: String,
@@ -42,6 +42,14 @@ const marketSchema = new Schema({
   },
   location: {
     type: String
+  },
+  rating: {
+    type: Object,
+    default: {}
+  },
+  disableComments: {
+    type: Boolean,
+    default: false
   }
 });
 
