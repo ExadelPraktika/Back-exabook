@@ -8,10 +8,6 @@ const marketSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
-  avatar: {
-    type: String,
-    default: ''
-  },
   title: {
     type: String,
     required: true
