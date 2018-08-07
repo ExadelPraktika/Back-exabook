@@ -32,4 +32,13 @@ router.route('/update/likes')
 router.route('/update/comments')
   .post(passportJWT, MarketplaceController.updateComments);
 
+router.route('/comment')
+  .post(passportJWT, MarketplaceController.addComment);
+
+router.route('/delete/comment')
+  .post(passportJWT, MarketplaceController.deleteComment);
+
+router.route('/like/comment')
+  .post(passportJWT, MarketplaceController.likeComment);
+
 module.exports = router;

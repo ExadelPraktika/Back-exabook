@@ -24,7 +24,6 @@ module.exports = {
         'no-unused-vars': [2, { "args": "none" }],
         'no-empty': ["error", { allowEmptyCatch: true }],
         'no-shadow': ["error", { "hoist": "functions" }],
-        'func-names': ["error", "never"],
         'no-param-reassign': ["error", { "props": false }]
       }
 };

@@ -46,7 +46,29 @@ const marketSchema = new Schema({
   disableComments: {
     type: Boolean,
     default: false
-  }
+  },
+  comments: [
+    {
+      text: {
+        type: String,
+        required: true
+      },
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      name: {
+        type: String
+      },
+      likes: {
+        type: Array,
+        default: []
+      },
+      avatar: {
+        type: String
+      }
+    }
+  ]
 });
 
 // Create a model
