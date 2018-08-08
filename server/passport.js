@@ -47,6 +47,8 @@ passport.use('googleToken', new GooglePlusTokenStrategy({
 
     const newUser = new User({
       method: 'google',
+      email: profile.emails[0].value,
+      name: profile.displayName,
       google: {
         id: profile.id,
         email: profile.emails[0].value,
@@ -77,6 +79,8 @@ passport.use('facebookToken', new FacebookTokenStrategy({
 
     const newUser = new User({
       method: 'facebook',
+      name: profile.displayName,
+      email: profile.emails[0].value,
       facebook: {
         id: profile.id,
         email: profile.emails[0].value,
