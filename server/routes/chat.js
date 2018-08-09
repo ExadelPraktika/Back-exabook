@@ -29,10 +29,4 @@ router.route('/channel/:channelName')
 router.route('/postchannel/:channelName')
   .post(passportJWT, ChatController.postToChannel);
 
-router.route('/reply')
-  .post(passportJWT, ChatController.sendReply);
-
-router.route('/reply')
-  .post(passportJWT, ChatController.sendReply);
-
 module.exports = router;
