@@ -2,7 +2,7 @@ const express = require('express');
 
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+// const io = require('socket.io')(server);
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -38,10 +38,6 @@ app.use('/users', require('./routes/users'));
 app.use('/posts', require('./routes/posts'));
 app.use('/events', require('./routes/events'));
 app.use('/marketplace', require('./routes/marketplace'));
-// Sockets
-io.on('connection', (socket) => {
-  socket.on('SEND_MESSAGE', (data) => {
-    io.emit('RECEIVE_MESSAGE', data);
-  });
-});
+app.use('/chat', require('./routes/chat'));
+
 // refactored code for easier test and feature scale
