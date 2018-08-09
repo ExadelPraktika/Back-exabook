@@ -22,6 +22,14 @@ const postSchema = new Schema({
   shares: {
     type: Number,
     default: 0
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false
+  },
+  editing: {
+    type: Boolean,
+    default: false
   }
 });
 

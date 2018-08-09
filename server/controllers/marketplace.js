@@ -70,6 +70,16 @@ module.exports = {
             if (post.creator.toString() !== req.params.userId) {
               return res.status(401).json({ notauthorized: 'User not authorize' });
             }
+            // Moving the posts average rating to users market profile rating
+            if (Object.keys(post.rating).length !== 0) {
+              let averageRating = 0;
+              Object.keys(post.rating).forEach((rate) => {
+                averageRating += post.rating[rate];
+              });
+              averageRating /= Object.keys(post.rating).length;
+              User.findOneAndUpdate({ _id: req.params.userId }, { $push: { marketRating: { averageRating } } });
+            }
+            // finishing adding users market rating
             post.remove().then(() => {
               res.json({ success: true });
             })
@@ -110,6 +120,48 @@ module.exports = {
   },
   updateComments: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { disableComments: req.body.disableComments } }, { upsert: true })
+      .then((post) => {
+        Marketplace.find()
+          .populate('creator')
+          .then((posts) => { res.json(posts); })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+  addComment: async (req, res) => {
+    Marketplace.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
+      .then((post) => {
+        Marketplace.find()
+          .populate('creator')
+          .then((posts) => { res.json(posts); })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+  deleteComment: async (req, res) => {
+    Marketplace.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
+      .then((post) => {
+        Marketplace.find()
+          .populate('creator')
+          .then((posts) => { res.json(posts); })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+  likeComment: async (req, res) => {
+    Marketplace.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
       .then((post) => {
         Marketplace.find()
           .populate('creator')
