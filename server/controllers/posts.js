@@ -23,35 +23,61 @@ module.exports = {
   },
 
   getPost: async (req, res) => {
-    res.json({ msg: 'Get Post Works' });
+    Post.findById(req.params.id)
+      .then((post) => { res.json(post); })
+      .catch((err) => {
+        res.status(404).json({ nopostfound: 'No post found' });
+      });
   },
 
+  //DELETE
+  // deletePost: async (req, res) => {
+  //       Post.findById(req.params.id)
+  //         .then((post) => {
+  //           post.remove().then(() => {
+  //             res.json({ success: true });
+  //           })
+  //             .catch((err) => {
+  //               res.status(404).json({ nopostfound: 'No event found' });
+  //             });
+  //           return true;
+  //         });
+  // }
+
+  //SOFT DELETE
   deletePost: async (req, res) => {
-    User.findById(req.params.id)
-      .then((user) => {
-        Post.findById(req.params.idas)
-          .then((post) => {
-            if (post.creator.toString() !== req.params.id) {
-              return res.status(401).json({ notauthorize: 'User not authorize' });
-            }
-            post.remove().then(() => {
-              res.json({ success: true });
-            })
-              .catch((err) => {
-                res.status(404).json({ nopostfound: 'No event found' });
-              });
-            return true;
+    Post.findById(req.params.id)
+      .then((post) => {
+        post.update({isDeleted: true}).then(() => {
+          res.json({ success: true });
+        })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No event found' });
           });
+        return true;
       });
   },
 
   getFeed: async (req, res) => {
-    Post.find()
+    Post.find({isDeleted: false})
+      .sort({ datePosted: -1 })
       .then((posts) => { res.json(posts); })
       .catch((err) => {
         res.status(404).json({ nopostfound: 'No posts found' });
       });
   },
+
+  editPost: async (req, res) => {
+    Post.findById(req.params.id)
+      .then((post) => {
+        post.editing = !post.editing;
+         post.update({editing: post.editing}).then(() => {
+           res.json({success: true});
+        })
+      .catch((err) => {
+        res.status(404).json({ nopostfound: 'No event found' });
+      });
+    })},
 
   likePost: async (req, res) => {
     res.json({ msg: 'Liking Works' });
