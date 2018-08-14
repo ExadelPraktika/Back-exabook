@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const User = require('../models/user');
+// const User = require('../models/user');
 const Post = require('../models/post');
 
 mongoose.set('debug', true);
@@ -30,7 +30,7 @@ module.exports = {
       });
   },
 
-  //DELETE
+  // DELETE
   // deletePost: async (req, res) => {
   //       Post.findById(req.params.id)
   //         .then((post) => {
@@ -44,11 +44,11 @@ module.exports = {
   //         });
   // }
 
-  //SOFT DELETE
+  // SOFT DELETE
   deletePost: async (req, res) => {
     Post.findById(req.params.id)
       .then((post) => {
-        post.update({isDeleted: true}).then(() => {
+        post.update({ isDeleted: true }).then(() => {
           res.json({ success: true });
         })
           .catch((err) => {
@@ -59,7 +59,7 @@ module.exports = {
   },
 
   getFeed: async (req, res) => {
-    Post.find({isDeleted: false})
+    Post.find({ isDeleted: false })
       .sort({ datePosted: -1 })
       .then((posts) => { res.json(posts); })
       .catch((err) => {
@@ -71,13 +71,14 @@ module.exports = {
     Post.findById(req.params.id)
       .then((post) => {
         post.editing = !post.editing;
-         post.update({editing: post.editing}).then(() => {
-           res.json({success: true});
+        post.update({ editing: post.editing }).then(() => {
+          res.json({ success: true });
         })
-      .catch((err) => {
-        res.status(404).json({ nopostfound: 'No event found' });
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No event found' });
+          });
       });
-    })},
+  },
 
   likePost: async (req, res) => {
     res.json({ msg: 'Liking Works' });
