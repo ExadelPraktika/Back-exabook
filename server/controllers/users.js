@@ -91,8 +91,8 @@ module.exports = {
   initFriendReq: function (req, res) {
     User.requestFriend({ _id: req.params.send }, { _id: req.params.receive }, (err, results) => {
       if (err) {
-        console.log(`Try to delete from server-side controller: ${req.id}`);
-        console.log(err);
+        //  console.log(`Try to delete from server-side controller: ${req.id}`);
+        //  console.log(err);
       } else {
         res.json(results);
       }
@@ -101,8 +101,8 @@ module.exports = {
   displayFriends: function (req, res) {
     User.getFriends({ _id: req.params.id }, (err, results) => {
       if (err) {
-        console.log(`Try to delete from server-side controller: ${req.id}`);
-        console.log(err);
+        // console.log(`Try to delete from server-side controller: ${req.id}`);
+        // console.log(err);
       } else {
         res.json(results);
       }

@@ -225,7 +225,7 @@ module.exports = {
     const { recipientId } = req.body.recipientId;
     const userId = req.user._id;
 
-   return Conversation.findOne({ participants: { $all: [userId, recipientId] } }, (err, foundConversation) => {
+    return Conversation.findOne({ participants: { $all: [userId, recipientId] } }, (err, foundConversation) => {
       if (err) {
         res.send({
           errror: err
@@ -261,7 +261,7 @@ module.exports = {
         });
         return next();
       });
-      
+      return true;
     });
   },
 

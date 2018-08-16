@@ -2,19 +2,31 @@ const express = require('express');
 
 const app = express();
 const server = require('http').createServer(app);
-// const io = require('socket.io')(server);
-
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
+
+const io = require('socket.io')(server);
+
 const db = require('./configuration/config').mongoURI;
 const dbTest = require('./configuration/config').mongoURITest;
+
+io.on('connection', (socket) => {
+  console.log(socket.id);
+
+  socket.on('SEND_MESSAGE', (data) => {
+    console.log('sended msg');
+    io.emit('RECEIVE_MESSAGE', data);
+  });
+});
+
 
 // Start the server
 const port = process.env.PORT || 3001;
 server.listen(port);
+
 console.log(`Server listening at ${port}`);
 
 mongoose.Promise = global.Promise;
