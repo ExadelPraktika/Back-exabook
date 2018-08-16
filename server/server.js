@@ -2,19 +2,56 @@ const express = require('express');
 
 const app = express();
 const server = require('http').createServer(app);
-// const io = require('socket.io')(server);
-
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
+
+const io = require('socket.io')(server);
+
+const clients = {};
 const db = require('./configuration/config').mongoURI;
 const dbTest = require('./configuration/config').mongoURITest;
 
+// io.on('connection', (socket) => {
+//   console.log(socket.id);
+
+//   socket.on('SEND_MESSAGE', (data) => {
+//     console.log('sended msg');
+//     console.log(data.friend);
+//     io.emit('RECEIVE_MESSAGE', data);
+//   });
+// });
+io.sockets.on('connection', (socket) => {
+  socket.on('add-user', (data) => {
+    clients[data.email] = {
+      socket: socket.id
+    };
+  });
+
+  socket.on('private-message', (data) => {
+    console.log(`Sending: ${data.content} to ${data.email}`);
+    if (clients[data.email]) {
+      io.sockets.connected[clients[data.email].socket].emit('add-message', data);
+    } else {
+      console.log(`User does not exist: ${data.email}`);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    Object.keys(clients).forEach((k) => {
+      if (clients[k].socket === socket.id) {
+        console.log('aleliuja');
+        delete clients[k];
+      }
+    });
+  });
+});
 // Start the server
 const port = process.env.PORT || 3001;
 server.listen(port);
+
 console.log(`Server listening at ${port}`);
 
 mongoose.Promise = global.Promise;

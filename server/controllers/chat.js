@@ -257,7 +257,7 @@ module.exports = {
         });
         return next();
       });
-      return next();
+      return true;
     });
   },
 
