@@ -14,16 +14,12 @@ const clients = {};
 const db = require('./configuration/config').mongoURI;
 const dbTest = require('./configuration/config').mongoURITest;
 
-// io.on('connection', (socket) => {
-//   console.log(socket.id);
-
-//   socket.on('SEND_MESSAGE', (data) => {
-//     console.log('sended msg');
-//     console.log(data.friend);
-//     io.emit('RECEIVE_MESSAGE', data);
-//   });
-// });
-io.sockets.on('connection', (socket) => {
+io.on('connection', (socket) => {
+  socket.on('SEND_MESSAGE', (data) => {
+    io.emit('RECEIVE_MESSAGE', data);
+  });
+});
+/*io.sockets.on('connection', (socket) => {
   socket.on('add-user', (data) => {
     clients[data.email] = {
       socket: socket.id
@@ -47,7 +43,7 @@ io.sockets.on('connection', (socket) => {
       }
     });
   });
-});
+});*/
 // Start the server
 const port = process.env.PORT || 3001;
 server.listen(port);
