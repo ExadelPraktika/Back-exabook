@@ -30,4 +30,8 @@ router.route('/like/:id')
 router.route('/share/:id')
   .post(passportJWT, PostsController.likePost);
 
+router.route('/comment/:id')
+  .post(passportJWT, PostsController.commentPost);
+
+
 module.exports = router;
