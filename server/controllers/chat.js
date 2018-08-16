@@ -232,13 +232,11 @@ module.exports = {
         });
         return next(err);
       }
-
       if (!foundConversation) {
         return res.status(200).json({
           message: 'Could not find conversation'
         });
       }
-
       const reply = new Message({
         conversationId: foundConversation._id,
         body: privateMessage,
@@ -247,7 +245,6 @@ module.exports = {
           item: req.user._id
         }
       });
-
       reply.save((sentReply) => {
         if (err) {
           res.send({
@@ -255,7 +252,6 @@ module.exports = {
           });
           return next(err);
         }
-
         res.status(200).json({
           message: 'Reply sent.'
         });

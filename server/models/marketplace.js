@@ -29,8 +29,8 @@ const marketSchema = new Schema({
     default: []
   },
   timePosted: {
-    type: String,
-    required: true
+    type: Date,
+    default: Date.now
   },
   price: {
     type: Number,

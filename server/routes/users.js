@@ -15,9 +15,8 @@ const passportJWT = passport.authenticate('jwt', { session: false });
 router.route('/signup')
   .post(validateBody(schemas.authSchema), UsersController.signUp);
 
-
 router.route('/signin')
-  .post(validateBody(schemas.authSchema), passportSignIn, UsersController.signIn);
+  .post(validateBody(schemas.loginSchema), passportSignIn, UsersController.signIn);
 
 router.route('/oauth/google')
   .post(passport.authenticate('googleToken', { session: false }), UsersController.googleOAuth);
@@ -45,5 +44,8 @@ router.route('/friends/:id')
 
 router.route('/secret')
   .get(passportJWT, UsersController.secret);
+
+/* router.route('/refresh')
+  .post(passportJWT, UsersController.refreshUser); */
 
 module.exports = router;

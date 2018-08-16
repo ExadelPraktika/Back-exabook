@@ -20,6 +20,10 @@ module.exports = {
       name: Joi.string().required(),
       email: Joi.string().email().required(),
       password: Joi.string().required()
+    }),
+    loginSchema: Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().required()
     })
   }
 };
