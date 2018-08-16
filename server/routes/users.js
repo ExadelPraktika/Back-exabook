@@ -15,7 +15,7 @@ const passportJWT = passport.authenticate('jwt', { session: false });
 router.route('/signup')
   .post(validateBody(schemas.authSchema), UsersController.signUp);
 
-  router.route('/signin')
+router.route('/signin')
   .post(validateBody(schemas.loginSchema), passportSignIn, UsersController.signIn);
 
 router.route('/oauth/google')

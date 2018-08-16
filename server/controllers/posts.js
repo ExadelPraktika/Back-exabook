@@ -68,7 +68,7 @@ module.exports = {
       });
   },
 
-    editPost: async (req, res) => {
+  editPost: async (req, res) => {
     console.log(req);
     console.log(res);
     const newPost = new Post({

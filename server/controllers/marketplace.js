@@ -19,7 +19,9 @@ module.exports = {
   },
   getSearchedPosts: async (req, res) => {
     let search = {};
-    if (req.body.max) search = { price: { $gte: req.body.min, $lt: req.body.max } };
+    if (req.body.min && req.body.max) search = { ...search, price: { $gte: req.body.min, $lt: req.body.max } };
+    else if (req.body.min && !req.body.max) search = { ...search, price: { $gte: req.body.min } };
+    else if (!req.body.min && req.body.max) search = { ...search, price: { $lt: req.body.max } };
     if (req.body.category) search = { ...search, category: new RegExp(req.body.category, 'i') };
     if (req.body.location) search = { ...search, location: req.body.location };
     if (req.body.search) {
