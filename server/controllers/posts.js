@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// /const User = require('../models/user');
+// const User = require('../models/user');
 const Post = require('../models/post');
 
 mongoose.set('debug', true);
@@ -68,7 +68,7 @@ module.exports = {
       });
   },
 
-  editPost: async (req, res) => {
+    editPost: async (req, res) => {
     console.log(req);
     console.log(res);
     const newPost = new Post({
@@ -90,6 +90,7 @@ module.exports = {
           });
       });
   },
+
 
   commentPost: async (req, res) => {
     Post.findById(req.params.id)

@@ -46,4 +46,7 @@ router.route('/friends/:id')
 router.route('/secret')
   .get(passportJWT, UsersController.secret);
 
+/* router.route('/refresh')
+  .post(passportJWT, UsersController.refreshUser); */
+
 module.exports = router;
