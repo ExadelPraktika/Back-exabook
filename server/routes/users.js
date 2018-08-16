@@ -31,6 +31,18 @@ router.route('/get/:id')
 router.route('/avatar/:id')
   .put(UsersController.addAvatar);
 
+router.route('/friends/delete/:send/:receive')
+  .put(UsersController.deleteFriend);
+
+router.route('/friends/add/:send/:receive')
+  .put(UsersController.initFriendReq);
+
+router.route('/friends/search/:id')
+  .get(UsersController.showAll);
+
+router.route('/friends/:id')
+  .get(UsersController.displayFriends);
+
 router.route('/secret')
   .get(passportJWT, UsersController.secret);
 

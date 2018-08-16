@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const friends = require('mongoose-friends');
 
 const { Schema } = mongoose;
 
@@ -11,6 +12,12 @@ const userSchema = new Schema({
     required: true
   },
   avatar: {
+    type: String
+  },
+  name: {
+    type: String
+  },
+  email: {
     type: String
   },
   local: {
@@ -49,12 +56,29 @@ const userSchema = new Schema({
       type: String
     }
   },
+  friends: {
+    type: Array,
+    default: []
+  },
   marketRating: {
     type: Array,
     default: []
   }
+
+  // friends: [
+  //   {
+  //     friend: {
+  //       type: Schema.Types.ObjectId,
+  //       ref: 'User'
+  //     },
+  //     status: {
+  //       type: String
+  //     }
+  //   }
+  // ]
 });
 
+userSchema.plugin(friends({ pathName: 'friends' }));
 userSchema.pre('save', async function (next) {
   try {
     console.log('entered');
