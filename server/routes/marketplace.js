@@ -11,7 +11,7 @@ router.route('/test')
 router.route('/search')
   .post(passportJWT, MarketplaceController.getSearchedPosts);
 
-router.route('/:userId/:postId')
+router.route('/delete/:postId')
   .delete(passportJWT, MarketplaceController.deletePost);
 
 router.route('/')
@@ -20,8 +20,8 @@ router.route('/')
 router.route('/')
   .post(passportJWT, MarketplaceController.createPost);
 
-router.route('/my/:id')
-  .get(passportJWT, MarketplaceController.getUserPost);
+router.route('/myPosts')
+  .post(passportJWT, MarketplaceController.getUserPost);
 
 router.route('/update/rating')
   .post(passportJWT, MarketplaceController.updateRating);
