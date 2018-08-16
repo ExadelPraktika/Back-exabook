@@ -27,10 +27,39 @@ const postSchema = new Schema({
     type: Boolean,
     default: false
   },
-  editing: {
-    type: Boolean,
-    default: false
-  }
+  photo: {
+    type: String
+  },
+  comments: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      text: {
+        type: String,
+        required: true
+      },
+      photo: {
+        type: String
+      },
+      name: {
+        type: String
+      },
+      date: {
+        type: Date,
+        default: Date.now
+      },
+      likes: [
+        {
+          user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+          }
+        }
+      ]
+    }
+  ]
 });
 
 const Posts = mongoose.model('posts', postSchema);

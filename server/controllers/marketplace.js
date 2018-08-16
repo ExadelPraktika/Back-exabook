@@ -19,7 +19,9 @@ module.exports = {
   },
   getSearchedPosts: async (req, res) => {
     let search = {};
-    if (req.body.max) search = { price: { $gte: req.body.min, $lt: req.body.max } };
+    if (req.body.min && req.body.max) search = { ...search, price: { $gte: req.body.min, $lt: req.body.max } };
+    else if (req.body.min && !req.body.max) search = { ...search, price: { $gte: req.body.min } };
+    else if (!req.body.min && req.body.max) search = { ...search, price: { $lt: req.body.max } };
     if (req.body.category) search = { ...search, category: new RegExp(req.body.category, 'i') };
     if (req.body.location) search = { ...search, location: req.body.location };
     if (req.body.search) {
@@ -39,7 +41,7 @@ module.exports = {
       });
   },
   getUserPost: async (req, res) => {
-    Marketplace.find({ creator: req.params.id })
+    Marketplace.find({ creator: req.body.id })
       .populate('creator')
       .then((posts) => { res.json(posts); })
       .catch((err) => {
@@ -63,30 +65,35 @@ module.exports = {
     });
   },
   deletePost: async (req, res) => {
-    User.findById(req.params.userId)
-      .then((user) => {
-        Marketplace.findById(req.params.postId)
-          .then((post) => {
-            if (post.creator.toString() !== req.params.userId) {
-              return res.status(401).json({ notauthorized: 'User not authorize' });
-            }
-            // Moving the posts average rating to users market profile rating
-            if (Object.keys(post.rating).length !== 0) {
-              let averageRating = 0;
-              Object.keys(post.rating).forEach((rate) => {
-                averageRating += post.rating[rate];
-              });
-              averageRating /= Object.keys(post.rating).length;
-              User.findOneAndUpdate({ _id: req.params.userId }, { $push: { marketRating: { averageRating } } });
-            }
-            // finishing adding users market rating
+    Marketplace.findById(req.params.postId)
+      .then((post) => {
+        if (post.creator.toString() !== req.body.userId) {
+          res.status(401).json({ notauthorized: 'User not authorize' });
+        }
+        // Moving the posts average rating to users market profile rating
+        if (Object.keys(post.rating).length !== 0) {
+          let averageRating = 0;
+          Object.keys(post.rating).forEach((rate) => {
+            averageRating += post.rating[rate];
+          });
+          averageRating /= Object.keys(post.rating).length;
+          User.findOneAndUpdate({ _id: req.body.userId }, { $push: { marketRating: averageRating } }, { upsert: true }).then(() => {
             post.remove().then(() => {
               res.json({ success: true });
             })
               .catch((err) => {
-                res.status(404).json({ nopostfound: 'No post found' });
+                return res.status(404).json({ nopostfound: 'No post found' });
               });
-            return true;
+          })
+            .catch((err) => {
+              res.status(404).json({ nopostfound: 'No user found' });
+            });
+        }
+        post.remove().then(() => {
+          res.json({ success: true });
+        })
+          .catch((err) => {
+            return res.status(404).json({ nopostfound: 'No post found' });
           });
       });
   },
@@ -97,11 +104,11 @@ module.exports = {
           .populate('creator')
           .then((posts) => { res.json(posts); })
           .catch((err) => {
-            res.status(404).json({ nopostfound: 'No posts found' });
+            return res.status(404).json({ nopostfound: 'No posts found' });
           });
       })
       .catch((err) => {
-        res.json({ msg: 'Something went wrong' });
+        return res.json({ msg: 'Something went wrong' });
       });
   },
   updateLikes: async (req, res) => {

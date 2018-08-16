@@ -91,8 +91,8 @@ module.exports = {
   initFriendReq: function (req, res) {
     User.requestFriend({ _id: req.params.send }, { _id: req.params.receive }, (err, results) => {
       if (err) {
-        console.log(`Try to delete from server-side controller: ${req.id}`);
-        console.log(err);
+        //  console.log(`Try to delete from server-side controller: ${req.id}`);
+        //  console.log(err);
       } else {
         res.json(results);
       }
@@ -101,8 +101,8 @@ module.exports = {
   displayFriends: function (req, res) {
     User.getFriends({ _id: req.params.id }, (err, results) => {
       if (err) {
-        console.log(`Try to delete from server-side controller: ${req.id}`);
-        console.log(err);
+        // console.log(`Try to delete from server-side controller: ${req.id}`);
+        // console.log(err);
       } else {
         res.json(results);
       }
@@ -133,7 +133,14 @@ module.exports = {
     //   }
     // });
   },
-
+  /* refreshUser: async (req, res) => {
+    User.findById(req.body._id)
+      .populate('creator')
+      .then((user) => { res.json(user); })
+      .catch((err) => {
+        res.status(404).json({ nouserfound: 'No user found' });
+      });
+  }, */
   secret: async (req, res) => {
     console.log('I managed to get here!');
     res.json({ secret: 'resource' });
