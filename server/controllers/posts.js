@@ -14,7 +14,8 @@ module.exports = {
     const newPost = new Post({
       creator: req.user.id,
       postBody: req.body.postBody,
-      datePosted: req.body.datePosted
+      datePosted: req.body.datePosted,
+      photo: req.body.photo
     });
 
     newPost.save().then((post) => {
@@ -67,16 +68,44 @@ module.exports = {
       });
   },
 
-  editPost: async (req, res) => {
+    editPost: async (req, res) => {
+    console.log(req);
+    console.log(res);
+    const newPost = new Post({
+
+      postBody: req.body.postBody
+
+    });
+
+    console.log(newPost);
+
+
     Post.findById(req.params.id)
       .then((post) => {
-        post.editing = !post.editing;
-        post.update({ editing: post.editing }).then(() => {
+        post.update({ postBody: newPost.postBody }).then(() => {
           res.json({ success: true });
         })
           .catch((err) => {
             res.status(404).json({ nopostfound: 'No event found' });
           });
+      });
+  },
+
+
+  commentPost: async (req, res) => {
+    Post.findById(req.params.id)
+      .then((post) => {
+        const newComment = {
+          text: req.body.text,
+          name: req.body.name,
+          photo: req.body.photo,
+          user: req.user.id
+        };
+        post.comments.unshift(newComment);
+        return post.save().then((eventas) => { return res.json(eventas); });
+      })
+      .catch((err) => {
+        res.status(404).json({ nopostfound: 'No event found' });
       });
   },
 
