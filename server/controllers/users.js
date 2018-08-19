@@ -133,14 +133,14 @@ module.exports = {
     //   }
     // });
   },
-  /* refreshUser: async (req, res) => {
-    User.findById(req.body._id)
+  refreshUser: async (req, res) => {
+    User.findById(req.body.userId)
       .populate('creator')
       .then((user) => { res.json(user); })
       .catch((err) => {
         res.status(404).json({ nouserfound: 'No user found' });
       });
-  }, */
+  },
   secret: async (req, res) => {
     console.log('I managed to get here!');
     res.json({ secret: 'resource' });

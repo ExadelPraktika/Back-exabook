@@ -41,4 +41,7 @@ router.route('/delete/comment')
 router.route('/like/comment')
   .post(passportJWT, MarketplaceController.likeComment);
 
+router.route('/buying/:postId')
+  .post(passportJWT, MarketplaceController.buyItem);
+
 module.exports = router;
