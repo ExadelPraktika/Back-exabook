@@ -141,6 +141,33 @@ module.exports = {
         res.status(404).json({ nouserfound: 'No user found' });
       });
   },
+  removeBoughtItems: async (req, res) => {
+    User.findOneAndUpdate({ _id: req.body.userId }, { $set: { sellingTo: req.body.sellingTo } }, { upsert: true })
+      .then((user) => { res.json(user); })
+      .catch((err) => {
+        res.status(404).json({ nouserfound: 'No user found' });
+      });
+  },
+  removeSoldItem: async (req, res) => {
+    User.find({ buyingFrom: { $elemMatch: { sellingItem: req.body.postId } } })
+      .then((users) => {
+        users.forEach((user) => {
+          const buyingFrom = user.buyingFrom.filter((seller) => {
+            return seller.sellingItem !== req.body.postId;
+          });
+          User.update({ _id: user._id }, { $set: { buyingFrom: buyingFrom } }, { upsert: true }).then(() => {
+            res.json({ msg: 'success' });
+          })
+            .catch((err) => {
+              res.status(404).json({ error: 'Failed to update' });
+            });
+        });
+        res.json(users);
+      })
+      .catch((err) => {
+        res.status(404).json({ nousersfound: 'No users found' });
+      });
+  },
   secret: async (req, res) => {
     console.log('I managed to get here!');
     res.json({ secret: 'resource' });
