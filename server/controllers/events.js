@@ -23,7 +23,7 @@ module.exports = {
       });
   },
   getEvent: async (req, res) => {
-    Events.findById(req.params.id)
+    Events.findById(req.body.id)
       .populate(
         ['creator', 'going.user', 'comments.user']
       )
@@ -33,7 +33,7 @@ module.exports = {
       });
   },
   getUserEvents: async (req, res) => {
-    Events.find({ $or: [{ 'going.user': req.params.id }, { creator: req.params.id }] })
+    Events.find({ $or: [{ 'going.user': req.body.id }, { creator: req.body.id }] })
       .populate(
         ['creator', 'going.user']
       )
@@ -66,11 +66,11 @@ module.exports = {
     });
   },
   deleteEvent: async (req, res) => {
-    User.findById(req.params.id)
+    User.findById(req.body.id)
       .then((user) => {
-        Events.findById(req.params.idas)
+        Events.findById(req.body.idas)
           .then((event) => {
-            if (event.creator.toString() !== req.params.id) {
+            if (event.creator.toString() !== req.body.id) {
               return res.status(401).json({ notauthorize: 'User not authorize' });
             }
             event.remove().then(() => {
@@ -84,14 +84,14 @@ module.exports = {
       });
   },
   goingToEvent: async (req, res) => {
-    User.findById(req.params.id)
+    User.findById(req.body.id)
       .then((user) => {
-        Events.findById(req.params.idas)
+        Events.findById(req.body.idas)
           .then((event) => {
-            if (event.going.filter((going) => { return going.user.toString() === req.params.id; }).length > 0) {
+            if (event.going.filter((going) => { return going.user.toString() === req.body.id; }).length > 0) {
               return res.status(400).json({ alreadyliked: 'already going' });
             }
-            event.going.unshift({ user: req.params.id });
+            event.going.unshift({ user: req.body.id });
             return event.save().then((resevent) => { return res.json(resevent); });
           })
           .catch((err) => {
@@ -100,16 +100,16 @@ module.exports = {
       });
   },
   cancelGoing: async (req, res) => {
-    User.findById(req.params.id)
+    User.findById(req.body.id)
       .then((user) => {
-        Events.findById(req.params.idas)
+        Events.findById(req.body.idas)
           .then((event) => {
-            if (event.going.filter((going) => { return going.user.toString() === req.params.id; }).length === 0) {
+            if (event.going.filter((going) => { return going.user.toString() === req.body.id; }).length === 0) {
               return res.status(400).json({ alreadyliked: 'already not going' });
             }
             const removeIndex = event.going
               .map((item) => { return item.user.toString(); })
-              .indexOf(req.params.id);
+              .indexOf(req.body.id);
             event.going.splice(removeIndex, 1);
             return event.save().then((kazkas) => { return res.json(kazkas); });
           })
@@ -155,21 +155,19 @@ module.exports = {
   },
 
   commentLike: async (req, res) => {
-    console.log('working', req.params.id, req.params.idas, req.params.commentID);
     Events.findOneAndUpdate(
-      { _id: req.params.idas, comments: { $elemMatch: { _id: req.params.commentID, 'likes.user': { $ne: req.params.id } } } },
-      { $push: { 'comments.$.likes': { user: req.params.id } } },
+      { _id: req.body.eventID, comments: { $elemMatch: { _id: req.body.commentID, 'likes.user': { $ne: req.body.userID } } } },
+      { $push: { 'comments.$.likes': { user: req.body.userID } } },
       (result) => {
         res.json(result);
       }
     );
   },
   deleteLike: async (req, res) => {
-    console.log('working', req.params.id, req.params.idas, req.params.commentID);
     Events.findOneAndUpdate(
-      { _id: req.params.idas, comments: { $elemMatch: { _id: req.params.commentID } } },
+      { _id: req.body.eventID, comments: { $elemMatch: { _id: req.body.commentID } } },
       {
-        $pull: { 'comments.$.likes': { user: req.params.id } }
+        $pull: { 'comments.$.likes': { user: req.body.userID } }
       },
       (result) => {
         res.json(result);
