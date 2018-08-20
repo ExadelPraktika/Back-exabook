@@ -19,7 +19,8 @@ io.on('connection', (socket) => {
     io.emit('RECEIVE_MESSAGE', data);
   });
 });
-/* io.sockets.on('connection', (socket) => {
+
+io.sockets.on('connection', (socket) => {
   socket.on('add-user', (data) => {
     clients[data.email] = {
       socket: socket.id
@@ -27,9 +28,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('private-message', (data) => {
-    console.log(`Sending: ${data.content} to ${data.email}`);
+    console.log(`Sending: ${data.message} to ${data.email}`);
     if (clients[data.email]) {
-      io.sockets.connected[clients[data.email].socket].emit('add-message', data);
+    // io.sockets.connected[clients[data.email].socket].emit('add-message', data);
+    // io.sockets.connected[clients[data.email1].socket].emit('add-message', data);
+      io.in(clients[data.email].socket).emit('add-message', data);
+      io.in(clients[data.email1].socket).emit('add-message', data);
     } else {
       console.log(`User does not exist: ${data.email}`);
     }
@@ -43,7 +47,7 @@ io.on('connection', (socket) => {
       }
     });
   });
-}); */
+});
 // Start the server
 const port = process.env.PORT || 3001;
 server.listen(port);

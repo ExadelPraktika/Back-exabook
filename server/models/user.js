@@ -63,6 +63,14 @@ const userSchema = new Schema({
   marketRating: {
     type: Array,
     default: []
+  },
+  sellingTo: {
+    type: Array,
+    default: []
+  },
+  buyingFrom: {
+    type: Array,
+    default: []
   }
 
   // friends: [

@@ -45,7 +45,13 @@ router.route('/friends/:id')
 router.route('/secret')
   .get(passportJWT, UsersController.secret);
 
-/* router.route('/refresh')
-  .post(passportJWT, UsersController.refreshUser); */
+router.route('/refresh')
+  .post(passportJWT, UsersController.refreshUser);
+
+router.route('/remove/boughtItems')
+  .post(passportJWT, UsersController.removeBoughtItems);
+
+router.route('/remove/soldItem')
+  .post(passportJWT, UsersController.removeSoldItem);
 
 module.exports = router;
