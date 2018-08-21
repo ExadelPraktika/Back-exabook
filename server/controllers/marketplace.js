@@ -48,19 +48,21 @@ module.exports = {
       });
   },
   createPost: async (req, res) => {
-    const newPost = new Marketplace({
-      creator: req.user.id,
-      title: req.body.title,
-      description: req.body.description,
-      images: req.body.images,
-      liked: req.body.liked,
-      category: req.body.category,
-      timePosted: req.body.timePosted,
-      price: req.body.price,
-      location: req.body.location
-    });
-    newPost.save().then((post) => {
-      res.json(post);
+    User.findById(req.user._id).then((user) => {
+      const newPost = new Marketplace({
+        creator: user,
+        title: req.body.title,
+        description: req.body.description,
+        images: req.body.images,
+        liked: req.body.liked,
+        category: req.body.category,
+        timePosted: req.body.timePosted,
+        price: req.body.price,
+        location: req.body.location
+      });
+      newPost.save().then((post) => {
+        res.json(post);
+      });
     });
   },
   deletePost: async (req, res) => {
@@ -99,7 +101,8 @@ module.exports = {
   updateRating: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { rating: req.body.rating } }, { upsert: true })
       .then(() => {
-        Marketplace.find({ _id: { $or: req.body.postIds } })
+        Marketplace.find({ _id: { $in: req.body.postIds } })
+          .populate('creator')
           .then((posts) => { res.json(posts); });
       })
       .catch(() => {
@@ -109,7 +112,8 @@ module.exports = {
   updateLikes: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { liked: req.body.liked } }, { upsert: true })
       .then(() => {
-        Marketplace.find({ _id: { $or: req.body.postIds } })
+        Marketplace.find({ _id: { $in: req.body.postIds } })
+          .populate('creator')
           .then((posts) => { res.json(posts); });
       })
       .catch(() => {
@@ -119,7 +123,7 @@ module.exports = {
   updateComments: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { disableComments: req.body.disableComments } }, { upsert: true })
       .then(() => {
-        Marketplace.find({ _id: { $or: req.body.postIds } })
+        Marketplace.find({ _id: { $in: req.body.postIds } })
           .populate('creator')
           .then((posts) => { res.json(posts); });
       })
@@ -130,7 +134,7 @@ module.exports = {
   addComment: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
       .then(() => {
-        Marketplace.find({ _id: { $or: req.body.postIds } })
+        Marketplace.find({ _id: { $in: req.body.postIds } })
           .populate('creator')
           .then((posts) => { res.json(posts); });
       })
