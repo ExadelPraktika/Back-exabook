@@ -24,6 +24,7 @@ io.sockets.on('connection', (socket) => {
     clients[data.email] = {
       socket: socket.id
     };
+    console.log('connectionas ivyko');
   });
 
   socket.on('private-message', (data) => {
@@ -75,5 +76,6 @@ app.use('/posts', require('./routes/posts'));
 app.use('/events', require('./routes/events'));
 app.use('/marketplace', require('./routes/marketplace'));
 app.use('/chat', require('./routes/chat'));
+app.use('/messages', require('./routes/messages'));
 
 // refactored code for easier test and feature scale
