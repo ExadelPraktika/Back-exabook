@@ -10,7 +10,7 @@ const passport = require('passport');
 
 const io = require('socket.io')(server);
 
-// const clients = {};
+const clients = {};
 const db = require('./configuration/config').mongoURI;
 const dbTest = require('./configuration/config').mongoURITest;
 

@@ -99,12 +99,8 @@ module.exports = {
   updateRating: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { rating: req.body.rating } }, { upsert: true })
       .then(() => {
-        Marketplace.find()
-          .populate('creator')
-          .then((posts) => { res.json(posts); })
-          .catch(() => {
-            return res.status(404).json({ nopostfound: 'No posts found' });
-          });
+        Marketplace.find({ _id: { $or: req.body.postIds } })
+          .then((posts) => { res.json(posts); });
       })
       .catch(() => {
         return res.json({ msg: 'Something went wrong' });
@@ -113,12 +109,8 @@ module.exports = {
   updateLikes: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { liked: req.body.liked } }, { upsert: true })
       .then(() => {
-        Marketplace.find()
-          .populate('creator')
-          .then((posts) => { res.json(posts); })
-          .catch(() => {
-            res.status(404).json({ nopostfound: 'No posts found' });
-          });
+        Marketplace.find({ _id: { $or: req.body.postIds } })
+          .then((posts) => { res.json(posts); });
       })
       .catch(() => {
         res.json({ msg: 'Something went wrong' });
@@ -127,12 +119,9 @@ module.exports = {
   updateComments: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { disableComments: req.body.disableComments } }, { upsert: true })
       .then(() => {
-        Marketplace.find()
+        Marketplace.find({ _id: { $or: req.body.postIds } })
           .populate('creator')
-          .then((posts) => { res.json(posts); })
-          .catch(() => {
-            res.status(404).json({ nopostfound: 'No posts found' });
-          });
+          .then((posts) => { res.json(posts); });
       })
       .catch(() => {
         res.json({ msg: 'Something went wrong' });
@@ -141,15 +130,12 @@ module.exports = {
   addComment: async (req, res) => {
     Marketplace.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
       .then(() => {
-        Marketplace.find()
+        Marketplace.find({ _id: { $or: req.body.postIds } })
           .populate('creator')
-          .then((posts) => { res.json(posts); })
-          .catch(() => {
-            res.status(404).json({ nopostfound: 'No posts found' });
-          });
+          .then((posts) => { res.json(posts); });
       })
-      .catch(() => {
-        res.json({ msg: 'Something went wrong' });
+      .catch((err) => {
+        res.json({ msg: err });
       });
   },
   deleteComment: async (req, res) => {
@@ -158,12 +144,12 @@ module.exports = {
         Marketplace.find()
           .populate('creator')
           .then((posts) => { res.json(posts); })
-          .catch(() => {
-            res.status(404).json({ nopostfound: 'No posts found' });
+          .catch((err) => {
+            res.status(404).json({ error: err });
           });
       })
-      .catch(() => {
-        res.json({ msg: 'Something went wrong' });
+      .catch((err) => {
+        res.json({ error: err });
       });
   },
   likeComment: async (req, res) => {
