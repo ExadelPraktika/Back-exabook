@@ -6,32 +6,28 @@ require('../passport');
 
 const passportJWT = passport.authenticate('jwt', { session: false });
 
-router.route('/test')
-  .get(passportJWT, PostsController.test);
+router.route('/test').get(passportJWT, PostsController.test);
 
-router.route('/:id')
-  .get(passportJWT, PostsController.getPost);
+router.route('/:id').get(passportJWT, PostsController.getPost);
 
-router.route('/edit/:id')
-  .post(passportJWT, PostsController.editPost);
+router.route('/edit').post(passportJWT, PostsController.editPost);
 
-router.route('/')
-  .get(passportJWT, PostsController.getFeed);
+router.route('/').get(passportJWT, PostsController.getFeed);
 
-router.route('/delete/:id/')
-  .get(PostsController.deletePost);
+router.route('/delete/:id/').get(PostsController.deletePost);
 
-router.route('/')
-  .post(passportJWT, PostsController.addPost);
+router.route('/').post(passportJWT, PostsController.addPost);
 
-router.route('/like/:id')
-  .post(passportJWT, PostsController.likePost);
+router.route('/like/').post(passportJWT, PostsController.likePost);
 
-router.route('/share/:id')
-  .post(passportJWT, PostsController.likePost);
+router.route('/share/:id').post(passportJWT, PostsController.likePost);
 
-router.route('/comment/:id')
-  .post(passportJWT, PostsController.commentPost);
+router.route('/comment').post(passportJWT, PostsController.commentPost);
 
+router.route('/comment/like').post(passportJWT, PostsController.likeComment);
+
+router.route('/comment/update').post(passportJWT, PostsController.updateComments);
+
+router.route('/comment/delete').post(passportJWT, PostsController.deleteComment);
 
 module.exports = router;
