@@ -14,11 +14,12 @@ const clients = {};
 const db = require('./configuration/config').mongoURI;
 const dbTest = require('./configuration/config').mongoURITest;
 
-// io.on('connection', (socket) => {
-//   socket.on('SEND_MESSAGE', (data) => {
-//     io.emit('RECEIVE_MESSAGE', data);
-//   });
-// });
+io.on('connection', (socket) => {
+  socket.on('SEND_MESSAGE', (data) => {
+    io.emit('RECEIVE_MESSAGE', data);
+  });
+});
+
 io.sockets.on('connection', (socket) => {
   socket.on('add-user', (data) => {
     clients[data.email] = {
