@@ -30,11 +30,11 @@ io.sockets.on('connection', (socket) => {
 
   socket.on('private-message', (data) => {
     console.log(`Sending: ${data.message} to ${data.email}`);
-    if (clients[data.email]) {
+    if (clients[data.email] || clients[data.email1]) {
     // io.sockets.connected[clients[data.email].socket].emit('add-message', data);
     // io.sockets.connected[clients[data.email1].socket].emit('add-message', data);
-      io.in(clients[data.email].socket).emit('add-message', data);
-      io.in(clients[data.email1].socket).emit('add-message', data);
+      if (clients[data.email]) io.in(clients[data.email].socket).emit('add-message', data);
+      if (clients[data.email1]) io.in(clients[data.email1].socket).emit('add-message', data);
     } else {
       console.log(`User does not exist: ${data.email}`);
     }
