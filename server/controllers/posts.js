@@ -4,7 +4,6 @@ const Post = require('../models/post');
 
 mongoose.set('debug', true);
 
-
 module.exports = {
   test: async (req, res) => {
     res.json({ msg: 'Events Work' });
@@ -25,7 +24,10 @@ module.exports = {
 
   getPost: async (req, res) => {
     Post.findById(req.params.id)
-      .then((post) => { res.json(post); })
+      .populate('creator')
+      .then((post) => {
+        res.json(post);
+      })
       .catch((err) => {
         res.status(404).json({ nopostfound: 'No post found' });
       });
@@ -47,74 +49,157 @@ module.exports = {
 
   // SOFT DELETE
   deletePost: async (req, res) => {
-    Post.findById(req.params.id)
-      .then((post) => {
-        post.update({ isDeleted: true }).then(() => {
+    Post.findById(req.params.id).then((post) => {
+      post
+        .update({ isDeleted: true })
+        .then(() => {
           res.json({ success: true });
         })
-          .catch((err) => {
-            res.status(404).json({ nopostfound: 'No event found' });
-          });
-        return true;
-      });
+        .catch((err) => {
+          res.status(404).json({ nopostfound: 'No event found' });
+        });
+      return true;
+    });
   },
 
   getFeed: async (req, res) => {
     Post.find({ isDeleted: false })
+      .populate('creator')
       .sort({ datePosted: -1 })
-      .then((posts) => { res.json(posts); })
+      .then((posts) => {
+        res.json(posts);
+      })
       .catch((err) => {
         res.status(404).json({ nopostfound: 'No posts found' });
       });
   },
 
   editPost: async (req, res) => {
-    console.log(req);
-    console.log(res);
-    const newPost = new Post({
-
-      postBody: req.body.postBody
-
-    });
-
-    console.log(newPost);
-
-
-    Post.findById(req.params.id)
+    Post.update({ _id: req.body._id }, { $set: { postBody: req.body.postBody, photo: req.body.photo } }, { upsert: true })
       .then((post) => {
-        post.update({ postBody: newPost.postBody }).then(() => {
-          res.json({ success: true });
-        })
+        Post.find({ isDeleted: false })
+          .populate('creator')
+          .sort({ datePosted: -1 })
+          .then((posts) => {
+            res.json(posts);
+          })
           .catch((err) => {
-            res.status(404).json({ nopostfound: 'No event found' });
+            res.status(404).json({ nopostfound: 'No posts found' });
           });
-      });
-  },
-
-
-  commentPost: async (req, res) => {
-    Post.findById(req.params.id)
-      .then((post) => {
-        const newComment = {
-          text: req.body.text,
-          name: req.body.name,
-          photo: req.body.photo,
-          user: req.user.id
-        };
-        post.comments.unshift(newComment);
-        return post.save().then((eventas) => { return res.json(eventas); });
       })
       .catch((err) => {
-        res.status(404).json({ nopostfound: 'No event found' });
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+  // likePost: async (req, res) => {
+  //   console.log('daejo like back')
+  //   Post.findOneAndUpdate({ _id: req.params.postID }, { $push: { likes: { user: req.params.userID } } }, (result) => {
+  //     res.json(result);
+  //   });
+  // }
+
+  likePost: async (req, res) => {
+    Post.update({ _id: req.body._id }, { $set: { liked: req.body.liked } }, { upsert: false })
+      .then((post) => {
+        Post.find({ isDeleted: false })
+          .populate('creator')
+          .sort({ datePosted: -1 })
+          .then((posts) => {
+            res.json(posts);
+          })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
       });
   },
 
-  likePost: async (req, res) => {
-    res.json({ msg: 'Liking Works' });
+  commentPost: async (req, res) => {
+    Post.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
+      .then((post) => {
+        Post.find({ isDeleted: false })
+          .populate('creator')
+          .sort({ datePosted: -1 })
+          .then((posts) => {
+            res.json(posts);
+          })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+
+  deleteComment: async (req, res) => {
+    Post.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
+      .then((post) => {
+        Post.find({ isDeleted: false })
+          .populate('creator')
+          .sort({ datePosted: -1 })
+          .then((posts) => {
+            res.json(posts);
+          })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+  likeComment: async (req, res) => {
+    Post.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
+      .then((post) => {
+        Post.find({ isDeleted: false })
+          .sort({ datePosted: -1 })
+
+          .populate('creator')
+          .then((posts) => {
+            res.json(posts);
+          })
+          .catch((err) => {
+            res.status(404).json({ nopostfound: 'No posts found' });
+          });
+      })
+      .catch((err) => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+
+  updateComments: async (req, res) => {
+    Post.update({ _id: req.body._id }, { $set: { disableComments: req.body.disableComments } }, { upsert: true })
+      .then(() => {
+        Post.find({ _id: { $or: req.body.postIds }, isDeleted: false })
+          .populate('creator')
+          .sort({ datePosted: -1 })
+          .then((posts) => { res.json(posts); });
+      })
+      .catch(() => {
+        res.json({ msg: 'Something went wrong' });
+      });
+  },
+
+  deleteComment: async (req, res) => {
+    Post.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
+      .then(() => {
+        Post.find( {isDeleted: false})
+          .populate('creator')
+          .sort({ datePosted: -1 })
+          .then((posts) => { res.json(posts); })
+          .catch((err) => {
+            res.status(404).json({ error: err });
+          });
+      })
+      .catch((err) => {
+        res.json({ error: err });
+      });
   },
 
   sharePost: async (req, res) => {
     res.json({ msg: 'Sharing Works' });
   }
-
 };
