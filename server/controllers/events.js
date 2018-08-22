@@ -47,22 +47,23 @@ module.exports = {
     const { errors, isValid } = validateEventInput(req.body);
     if (!isValid) {
       console.log(errors);
-      return res.status(400).json(errors);
+      res.status(400).json(errors);
     }
-
-    const newEvent = new Events({
-      creator: req.user.id,
-      title: req.body.title,
-      description: req.body.description,
-      location: req.body.location,
-      start: req.body.start,
-      photo: req.body.photo,
-      coordLat: req.body.coordLat,
-      coordLng: req.body.coordLng,
-      end: req.body.end
-    });
-    return newEvent.save().then((event) => {
-      res.json(event);
+    User.findById(req.user.id).then((user) => {
+      const newEvent = new Events({
+        creator: user,
+        title: req.body.title,
+        description: req.body.description,
+        location: req.body.location,
+        start: req.body.start,
+        photo: req.body.photo,
+        coordLat: req.body.coordLat,
+        coordLng: req.body.coordLng,
+        end: req.body.end
+      });
+      newEvent.save().then((event) => {
+        res.json(event);
+      });
     });
   },
   deleteEvent: async (req, res) => {

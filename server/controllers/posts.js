@@ -183,22 +183,6 @@ module.exports = {
       });
   },
 
-  deleteComment: async (req, res) => {
-    Post.update({ _id: req.body._id }, { $set: { comments: req.body.comments } }, { upsert: true })
-      .then(() => {
-        Post.find( {isDeleted: false})
-          .populate('creator')
-          .sort({ datePosted: -1 })
-          .then((posts) => { res.json(posts); })
-          .catch((err) => {
-            res.status(404).json({ error: err });
-          });
-      })
-      .catch((err) => {
-        res.json({ error: err });
-      });
-  },
-
   sharePost: async (req, res) => {
     res.json({ msg: 'Sharing Works' });
   }
