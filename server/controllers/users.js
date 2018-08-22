@@ -28,6 +28,7 @@ module.exports = {
     // Create a new user
     const newUser = new User({
       method: 'local',
+      name: name,
       local: {
         email: email,
         name: name,
