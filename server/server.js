@@ -19,17 +19,22 @@ io.on('connection', (socket) => {
     io.emit('RECEIVE_MESSAGE', data);
   });
 });
-/*io.sockets.on('connection', (socket) => {
+
+io.sockets.on('connection', (socket) => {
   socket.on('add-user', (data) => {
     clients[data.email] = {
       socket: socket.id
     };
+    console.log('connectionas ivyko');
   });
 
   socket.on('private-message', (data) => {
-    console.log(`Sending: ${data.content} to ${data.email}`);
-    if (clients[data.email]) {
-      io.sockets.connected[clients[data.email].socket].emit('add-message', data);
+    console.log(`Sending: ${data.message} to ${data.email}`);
+    if (clients[data.email] || clients[data.email1]) {
+    // io.sockets.connected[clients[data.email].socket].emit('add-message', data);
+    // io.sockets.connected[clients[data.email1].socket].emit('add-message', data);
+      if (clients[data.email]) io.in(clients[data.email].socket).emit('add-message', data);
+      if (clients[data.email1]) io.in(clients[data.email1].socket).emit('add-message', data);
     } else {
       console.log(`User does not exist: ${data.email}`);
     }
@@ -43,7 +48,7 @@ io.on('connection', (socket) => {
       }
     });
   });
-});*/
+});
 // Start the server
 const port = process.env.PORT || 3001;
 server.listen(port);
@@ -72,5 +77,6 @@ app.use('/posts', require('./routes/posts'));
 app.use('/events', require('./routes/events'));
 app.use('/marketplace', require('./routes/marketplace'));
 app.use('/chat', require('./routes/chat'));
+app.use('/messages', require('./routes/messages'));
 
 // refactored code for easier test and feature scale

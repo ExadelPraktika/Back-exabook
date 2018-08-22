@@ -15,9 +15,9 @@ const postSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  likes: {
-    type: Number,
-    default: 0
+  liked: {
+    type: Array,
+    default: []
   },
   shares: {
     type: Number,
@@ -30,34 +30,30 @@ const postSchema = new Schema({
   photo: {
     type: String
   },
+  disableComments: {
+    type: Boolean,
+    default: false
+  },
   comments: [
     {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      },
       text: {
         type: String,
         required: true
       },
-      photo: {
-        type: String
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
       },
       name: {
         type: String
       },
-      date: {
-        type: Date,
-        default: Date.now
+      likes: {
+        type: Array,
+        default: []
       },
-      likes: [
-        {
-          user: {
-            type: Schema.Types.ObjectId,
-            ref: 'User'
-          }
-        }
-      ]
+      avatar: {
+        type: String
+      }
     }
   ]
 });
