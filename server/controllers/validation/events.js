@@ -13,7 +13,6 @@ const validateEventInput = function (data) {
 
   if (data.start >= data.end) {
     errors.end = 'Event must end later than start';
-    console.log(givenDate);
   }
 
   if (!Validator.isLength(data.title, { min: 2, max: 35 })) {

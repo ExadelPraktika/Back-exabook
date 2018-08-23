@@ -25,25 +25,20 @@ io.sockets.on('connection', (socket) => {
     clients[data.email] = {
       socket: socket.id
     };
-    console.log('connectionas ivyko');
   });
 
   socket.on('private-message', (data) => {
-    console.log(`Sending: ${data.message} to ${data.email}`);
     if (clients[data.email] || clients[data.email1]) {
-    // io.sockets.connected[clients[data.email].socket].emit('add-message', data);
-    // io.sockets.connected[clients[data.email1].socket].emit('add-message', data);
       if (clients[data.email]) io.in(clients[data.email].socket).emit('add-message', data);
       if (clients[data.email1]) io.in(clients[data.email1].socket).emit('add-message', data);
     } else {
-      console.log(`User does not exist: ${data.email}`);
+      // console.log(`User does not exist: ${data.email}`);
     }
   });
 
   socket.on('disconnect', () => {
     Object.keys(clients).forEach((k) => {
       if (clients[k].socket === socket.id) {
-        console.log('aleliuja');
         delete clients[k];
       }
     });
@@ -53,7 +48,7 @@ io.sockets.on('connection', (socket) => {
 const port = process.env.PORT || 3001;
 server.listen(port);
 
-console.log(`Server listening at ${port}`);
+// console.log(`Server listening at ${port}`);
 
 mongoose.Promise = global.Promise;
 if (process.env.NODE_ENV === 'test') {

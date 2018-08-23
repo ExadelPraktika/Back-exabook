@@ -46,7 +46,6 @@ module.exports = {
   createEvent: async (req, res) => {
     const { errors, isValid } = validateEventInput(req.body);
     if (!isValid) {
-      console.log(errors);
       res.status(400).json(errors);
     }
     User.findById(req.user.id).then((user) => {
