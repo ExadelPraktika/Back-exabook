@@ -63,10 +63,8 @@ module.exports = {
   },
 
   getUser: async (req, res) => {
-    console.log('params', req.params.id);
     return User.findById(req.params.id)
       .then((user) => {
-        console.log(`this is user ${user}`);
         res.status(200).json({ user });
       });
   },
@@ -125,14 +123,6 @@ module.exports = {
         res.json(result);
       }
     );
-    // User.removeFriend({ _id: req.params.send }, { _id: req.params.receive }, (err, results) => {
-    //   if (err) {
-    //     console.log(`Try to delete from server-side controller: ${req.id}`);
-    //     console.log(err);
-    //   } else {
-    //     res.json(results);
-    //   }
-    // });
   },
   refreshUser: async (req, res) => {
     User.findById(req.body.userId)
@@ -170,7 +160,6 @@ module.exports = {
       });
   },
   secret: async (req, res) => {
-    console.log('I managed to get here!');
     res.json({ secret: 'resource' });
   }
 };

@@ -33,20 +33,6 @@ module.exports = {
       });
   },
 
-  // DELETE
-  // deletePost: async (req, res) => {
-  //       Post.findById(req.params.id)
-  //         .then((post) => {
-  //           post.remove().then(() => {
-  //             res.json({ success: true });
-  //           })
-  //             .catch((err) => {
-  //               res.status(404).json({ nopostfound: 'No event found' });
-  //             });
-  //           return true;
-  //         });
-  // }
-
   // SOFT DELETE
   deletePost: async (req, res) => {
     Post.findById(req.params.id).then((post) => {
@@ -91,12 +77,6 @@ module.exports = {
         res.json({ msg: 'Something went wrong' });
       });
   },
-  // likePost: async (req, res) => {
-  //   console.log('daejo like back')
-  //   Post.findOneAndUpdate({ _id: req.params.postID }, { $push: { likes: { user: req.params.userID } } }, (result) => {
-  //     res.json(result);
-  //   });
-  // }
 
   likePost: async (req, res) => {
     Post.update({ _id: req.body._id }, { $set: { liked: req.body.liked } }, { upsert: false })
